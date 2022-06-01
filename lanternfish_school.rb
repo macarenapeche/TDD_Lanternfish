@@ -25,7 +25,7 @@ class Lanternfish
     @status = status
   end
 
-  def tick # REVIEW: Better call it #tick!
+  def tick! # REVIEW: Better call it #tick!
     @status = status > 0 ? status - 1 : 6
     # if @status > 0
     #   @status -= 1
@@ -36,9 +36,7 @@ class Lanternfish
   end
 
   def ==(other)
-    return false if !other.is_a?(self.class)
-
-    @status == other.status
+    other.is_a?(self.class) && @status == other.status
   end
 
 end
@@ -59,20 +57,17 @@ class LanternfishSchool
   attr_reader :list
 
   def initialize(list = [])
-    # REVIEW: Guard clause would do better
-    if list.is_a?(Array) && list.all? { |n| n.is_a?(Integer) }
-      @list = list.map { |n| Lanternfish.new(n) }
-      # This works, but not widely used
-      # @list = list.map(&Lanternfish.method(:new))
-    else 
-      raise ArgumentError, "Expected an array of lanternfishes as argument" # QUESTION: WHY DOES THIS RAISES A RUNTIME ERROR (WHEN I DON'T FORCE IT TO BE ARGUMENT ONE)
-    end
+    # REVIEW: Guard clause would do better (edited, review left)
+    raise ArgumentError, "Expected an array of lanternfishes as argument" unless list.is_a?(Array) && list.all? { |n| n.is_a?(Integer) }
+    
+    # This works, but not widely used
+    # @list = list.map(&Lanternfish.method(:new))
+    @list = list.map { |n| Lanternfish.new(n) }
+
   end
 
   def ==(other)
-    return false if !other.is_a?(self.class)
-
-    @list == other.list
+    other.is_a?(self.class) && @list == other.list
   end
 
   def add(fish)
@@ -80,31 +75,29 @@ class LanternfishSchool
     self
   end
 
-  def tick # REVIEW: Better call it #tick!
+  def tick! # REVIEW: Better call it #tick!
     new_fishes = 0
     @list.each { |fish| new_fishes += 1 if fish.status == 0 } # REVIEW: `Array#inject` / `Array#reduce` would do here!
 
     # REVIEW: Take a look at it, you'll meet that from time to time in real code
     # @list.map! { |fish| fish.tick }
-    @list.map!(&:tick)
+    @list.map!(&:tick!)
 
     new_fishes.times { add(Lanternfish.new) }
 
     self
   end
 
-  def after_some_days(n)
-    # REVIEW: Guard clause would do
-    if n.is_a?(Integer) && n > 0
-      n.times { tick }
-      self
-    else 
-      raise ArgumentError, "Expected positive integer as argument"
-    end
+  def after_some_days!(n)
+    # REVIEW: Guard clause would do (edited, review left)
+    raise ArgumentError, "Expected positive integer as argument" unless n.is_a?(Integer) && n > 0
+    
+    n.times { tick! }
+    self
   end
 
   def lanternfish_count(n)
-    after_some_days(n).list.count
+    after_some_days!(n).list.count
   end
 
 end

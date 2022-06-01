@@ -23,8 +23,8 @@ def test_lanternfish_equality
 end
 
 def test_lanternfish_tick
-  assert_equal(Lanternfish.new(3)) { Lanternfish.new(4).tick }
-  assert_equal(Lanternfish.new(6)) { Lanternfish.new(0).tick }
+  assert_equal(Lanternfish.new(3)) { Lanternfish.new(4).tick! }
+  assert_equal(Lanternfish.new(6)) { Lanternfish.new(0).tick! }
 end
 
 test_lanternfish_initialize
@@ -79,57 +79,54 @@ def test_lanternfish_school_tick
   school3 = LanternfishSchool.new([0,4,0])
   school3_tick = LanternfishSchool.new([6,3,6,8,8])
 
-  assert_equal(school1_tick) { school1.tick }
-  assert_equal(school2_tick) { school2.tick }
-  assert_equal(school3_tick) { school3.tick }
+  assert_equal(school1_tick) { school1.tick! }
+  assert_equal(school2_tick) { school2.tick! }
+  assert_equal(school3_tick) { school3.tick! }
 end
 
 
 def test_lanternfish_school_after_some_days
   # REVIEW: We can actually skip the schools 2 and 3
   school1 = LanternfishSchool.new
-  school2 = LanternfishSchool.new([2])
-  school2_after_2 = LanternfishSchool.new([0])
+  # school2 = LanternfishSchool.new([2])
+  # school2_after_2 = LanternfishSchool.new([0])
 
-  school3 = LanternfishSchool.new([0])
-  school3_after_2 = LanternfishSchool.new([5,7])
-  school3_after_8 = LanternfishSchool.new([6,1,8])
+  # school3 = LanternfishSchool.new([0])
+  # school3_after_2 = LanternfishSchool.new([5,7])
+  # school3_after_8 = LanternfishSchool.new([6,1,8])
 
   school4 = LanternfishSchool.new([3,4,3,1,2])
   school4_after_2 = LanternfishSchool.new([1,2,1,6,0,8])
   school4_after_12 = LanternfishSchool.new([5,6,5,3,4,5,6,0,0,1,5,6,7,7,7,8,8])
-  assert_error(ArgumentError) { school2.after_some_days(-1) }
-  assert_error(ArgumentError) { school2.after_some_days("a") }
+  assert_error(ArgumentError) { school1.after_some_days!(-1) }
+  assert_error(ArgumentError) { school1.after_some_days!("a") }
 
-  assert_equal(LanternfishSchool.new) { school1.after_some_days(2) }
-  assert_equal(school2_after_2) { school2.after_some_days(2) }
-  assert_equal(school3_after_2) { school3.after_some_days(2) }
-  assert_equal(school3_after_8) { school3.after_some_days(6) }
-  assert_equal(school4_after_2) { school4.after_some_days(2) }
-  assert_equal(school4_after_12) { school4.after_some_days(10) }
+  assert_equal(LanternfishSchool.new) { school1.after_some_days!(2) }
+  # assert_equal(school2_after_2) { school2.after_some_days!(2) }
+  # assert_equal(school3_after_2) { school3.after_some_days!(2) }
+  # assert_equal(school3_after_8) { school3.after_some_days!(6) }
+  assert_equal(school4_after_2) { LanternfishSchool.new([3,4,3,1,2]).after_some_days!(2) }
+  assert_equal(school4_after_12) { LanternfishSchool.new([3,4,3,1,2]).after_some_days!(12) }
 
 end
 
 
 def test_lanternfish_count
 
-  school = LanternfishSchool.new([5])
-
-  assert_error(ArgumentError) { school.lanternfish_count(-1) }
-  assert_error(ArgumentError) { school.lanternfish_count("a") }
+  assert_error(ArgumentError) { LanternfishSchool.new([5]).lanternfish_count(-1) }
+  assert_error(ArgumentError) { LanternfishSchool.new([5]).lanternfish_count("a") }
 
 
   # REVIEW: Actually, tests must be independent one on another, but these two are not
   # Rather should be assert_equal(...) { LanternfishSchool.new(...).lanternfish_count(...) }
-  assert_equal(1) { school.lanternfish_count(5) }
-  assert_equal(2) { school.lanternfish_count(3) }
+  assert_equal(1) { LanternfishSchool.new([5]).lanternfish_count(5) }
+  assert_equal(2) { LanternfishSchool.new([5]).lanternfish_count(8) }
 
   # REVIEW: school1 & school2 seem the same
   # We should rather cover different __cases__, not different __values__
-  school2 = LanternfishSchool.new([3,4,3,1,2])
 
-  assert_equal(26) { school2.lanternfish_count(18) }
-  assert_equal(5934) { school2.lanternfish_count(62) } # REVIEW: This heavy example may be skipped
+  assert_equal(26) { LanternfishSchool.new([3,4,3,1,2]).lanternfish_count(18) }
+  assert_equal(5934) { LanternfishSchool.new([3,4,3,1,2]).lanternfish_count(80) } # REVIEW: This heavy example may be skipped
 
 end
 
