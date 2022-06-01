@@ -1,5 +1,5 @@
 require './test_helper.rb'
-require './6_lanternfish.rb'
+require './lanternfish_school.rb'
 
 puts "Lanternfish tests:"
 

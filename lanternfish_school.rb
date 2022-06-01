@@ -1,6 +1,3 @@
-require './test_helper.rb'
-
-
 # The code should be able to:
 # 1. Read a file of integers separated by commas
 # 2. Convert this list to an array 
