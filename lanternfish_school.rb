@@ -18,7 +18,7 @@
 class Lanternfish
   attr_reader :status
 
-  def initialize(status = 8)
+  def initialize(status = 6)
     if status.is_a?(Integer) && status >= 0
       @status = status
     else

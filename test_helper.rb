@@ -2,15 +2,15 @@
 class ExpectationNotMetError < StandardError
 end
 
-def assert_equal(expected, &actual)
+def assert_equal(message = "ok", expected, &actual)
   result = actual.call
 
   raise ExpectationNotMetError, "Expected #{expected.inspect}, got #{result.inspect}" if result != expected
 
-  puts "ok"
+  puts message
 rescue ExpectationNotMetError => e
-  puts e
-  puts e.backtrace[1..].map { |line| "  #{line}" }
+  puts "  #{e}"
+  puts e.backtrace[1..].map { |line| "    #{line}" }
 end
 
 def assert_error(klass, &actual)
