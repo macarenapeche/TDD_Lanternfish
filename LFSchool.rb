@@ -1,37 +1,34 @@
-require './test_helper.rb'
-
-
-
 class LFSchool
   attr_reader :stages 
 
   def initialize(array)
-    raise ArgumentError, "Expected array as argument" if !array.is_a?(Array)
+    raise ArgumentError, "Expected array as argument" if !array.is_a?(Array) || array.any? { |item| !item.between?(0,8) }
     
     @stages = Hash.new(0)
     array.each { |i| @stages[i] += 1 }
-    
   end
 
   def lanternfish_count(n)
+    n.times { one_more_day! }
+    hash_value_sum
+  end
+
+  def hash_value_sum
+    @stages.values.sum
+  end
+
+  def one_more_day!
+    new_stages = Hash.new(0)
+    @stages.each do |k, v|
+      if k > 0
+        new_stages[k - 1] += v 
+      else 
+        new_stages[8] = v 
+        new_stages[6] += v
+      end
+    end
+
+    @stages = new_stages
   end
 end
 
-def test_lanternfish_initialize
-  assert_error(ArgumentError) { LFSchool.new(6) }
-end
-
-def test_lanternfish_stages
-  assert_equal({ 1 => 1 })  { LFSchool.new([1]).stages }
-end
-
-def test_lanternfish_count
-  initial = File.read('inputDay6.txt', chomp: true).split(",").map { |item| item.to_i }
-  assert_equal(initial.count) { LFSchool.new(initial).lanternfish_count(0) }
-  assert_equal(386536) { LFSchool.new(initial).lanternfish_count(80) }
-end
-
-
-test_lanternfish_initialize
-test_lanternfish_stages
-test_lanternfish_count
