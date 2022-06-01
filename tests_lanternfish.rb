@@ -12,18 +12,19 @@ end
 def test_lanternfish_status
   assert_equal("  Has 8 by default", 8) { Lanternfish.new.status }
   assert_equal("  Has 4 if assigned", 4) { Lanternfish.new(4).status }
-  assert_equal(0) { Lanternfish.new(0).status } 
+  # assert_equal(0) { Lanternfish.new(0).status } 
 end
 
 def test_lanternfish_equality
-  assert_equal(true) { Lanternfish.new == Lanternfish.new }
+  # assert_equal(true) { Lanternfish.new == Lanternfish.new }
   assert_equal(true) { Lanternfish.new(3) == Lanternfish.new(3) }
   assert_equal(false) { Lanternfish.new(4) == Lanternfish.new(3) }
+  assert_equal(false) { Lanternfish.new == "random gibberish"}
 end
 
 def test_lanternfish_tick
-  assert_equal(Lanternfish.new(3)) { Lanternfish.new(4).tap { |fish| fish.tick} }
-  assert_equal(Lanternfish.new(6)) { Lanternfish.new(0).tap { |fish| fish.tick} }
+  assert_equal(Lanternfish.new(3)) { Lanternfish.new(4).tick }
+  assert_equal(Lanternfish.new(6)) { Lanternfish.new(0).tick }
 end
 
 test_lanternfish_initialize
@@ -40,22 +41,22 @@ puts "Lanternfish School tests"
 
 # Now I want to create the LanternfishSchool directly from an array:
 
-def test_lanternfish_school_initialize
-  assert_equal(LanternfishSchool.new([5])) { LanternfishSchool.new([5]) }
-  assert_equal(LanternfishSchool.new([5,3])) { LanternfishSchool.new([5,3]) }
-end
+# def test_lanternfish_school_initialize
+  # assert_equal(LanternfishSchool.new([5])) { LanternfishSchool.new([5]) }
+  # assert_equal(LanternfishSchool.new([5,3])) { LanternfishSchool.new([5,3]) }
+# end
 
 def test_lanternfish_school_list
   assert_equal([Lanternfish.new(5)]) { LanternfishSchool.new([5]).list }
 end
 
-test_lanternfish_school_initialize
 test_lanternfish_school_list
 
 
 def test_lanternfish_school_equality
   assert_equal(true) { LanternfishSchool.new([6,5]) == LanternfishSchool.new([6,5]) }
   assert_equal(false) { LanternfishSchool.new([3]) == LanternfishSchool.new([4]) }
+  # REVIEW: another test for case when we try to compare a school to a random object
 end
 
 def test_lanternfish_school_add
@@ -85,6 +86,7 @@ end
 
 
 def test_lanternfish_school_after_some_days
+  # REVIEW: We can actually skip the schools 2 and 3
   school1 = LanternfishSchool.new
   school2 = LanternfishSchool.new([2])
   school2_after_2 = LanternfishSchool.new([0])
@@ -117,18 +119,22 @@ def test_lanternfish_count
   assert_error(ArgumentError) { school.lanternfish_count("a") }
 
 
+  # REVIEW: Actually, tests must be independent one on another, but these two are not
+  # Rather should be assert_equal(...) { LanternfishSchool.new(...).lanternfish_count(...) }
   assert_equal(1) { school.lanternfish_count(5) }
   assert_equal(2) { school.lanternfish_count(3) }
 
+  # REVIEW: school1 & school2 seem the same
+  # We should rather cover different __cases__, not different __values__
   school2 = LanternfishSchool.new([3,4,3,1,2])
 
   assert_equal(26) { school2.lanternfish_count(18) }
-  assert_equal(5934) { school2.lanternfish_count(62) }
+  assert_equal(5934) { school2.lanternfish_count(62) } # REVIEW: This heavy example may be skipped
 
 end
 
 
-test_lanternfish_school_initialize
+# test_lanternfish_school_initialize
 test_lanternfish_school_equality
 test_lanternfish_school_add
 puts "tick method"

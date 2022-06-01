@@ -18,20 +18,20 @@
 class Lanternfish
   attr_reader :status
 
-  def initialize(status = 6)
-    if status.is_a?(Integer) && status >= 0
-      @status = status
-    else
-      raise ArgumentError, "Expected a non negative integer as argument"
-    end
+  def initialize(status = 8)
+    # REVIEW: This approach is called a `Guard clause`
+    raise ArgumentError, "Expected a non negative integer as argument" unless status.is_a?(Integer) && status >= 0
+  
+    @status = status
   end
 
-  def tick 
-    if @status > 0
-      @status -= 1
-    else 
-      @status = 6
-    end
+  def tick # REVIEW: Better call it #tick!
+    @status = status > 0 ? status - 1 : 6
+    # if @status > 0
+    #   @status -= 1
+    # else 
+    #   @status = 6
+    # end
     self
   end
 
@@ -59,8 +59,11 @@ class LanternfishSchool
   attr_reader :list
 
   def initialize(list = [])
+    # REVIEW: Guard clause would do better
     if list.is_a?(Array) && list.all? { |n| n.is_a?(Integer) }
       @list = list.map { |n| Lanternfish.new(n) }
+      # This works, but not widely used
+      # @list = list.map(&Lanternfish.method(:new))
     else 
       raise ArgumentError, "Expected an array of lanternfishes as argument" # QUESTION: WHY DOES THIS RAISES A RUNTIME ERROR (WHEN I DON'T FORCE IT TO BE ARGUMENT ONE)
     end
@@ -69,7 +72,7 @@ class LanternfishSchool
   def ==(other)
     return false if !other.is_a?(self.class)
 
-    @list == other.list 
+    @list == other.list
   end
 
   def add(fish)
@@ -77,22 +80,23 @@ class LanternfishSchool
     self
   end
 
-  def tick
+  def tick # REVIEW: Better call it #tick!
     new_fishes = 0
-    @list.each { |fish| new_fishes += 1 if fish.status == 0 }
+    @list.each { |fish| new_fishes += 1 if fish.status == 0 } # REVIEW: `Array#inject` / `Array#reduce` would do here!
 
-    @list.map! do |fish|
-       fish.tick 
-    end
+    # REVIEW: Take a look at it, you'll meet that from time to time in real code
+    # @list.map! { |fish| fish.tick }
+    @list.map!(&:tick)
 
-    (0...new_fishes).each { |i| add(Lanternfish.new) }
+    new_fishes.times { add(Lanternfish.new) }
 
     self
   end
 
   def after_some_days(n)
+    # REVIEW: Guard clause would do
     if n.is_a?(Integer) && n > 0
-      (1..n).each { |i| tick() }
+      n.times { tick }
       self
     else 
       raise ArgumentError, "Expected positive integer as argument"
