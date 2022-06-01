@@ -1,5 +1,3 @@
-require './test_helper.rb'
-
 # The code should be able to:
 # 1. Read a file of integers separated by commas
 # 2. Convert this list to an array 
@@ -106,20 +104,3 @@ class LanternfishSchool
   end
 
 end
-
-
-
-
-# Now I want to create the LanternfishSchool directly from an array:
-
-def test_lanternfish_school_initialize
-  assert_equal(LanternfishSchool.new([5])) { LanternfishSchool.new([5]) }
-  assert_equal(LanternfishSchool.new([5,3])) { LanternfishSchool.new([5,3]) }
-end
-
-def test_lanternfish_school_list
-  assert_equal([Lanternfish.new(5)]) { LanternfishSchool.new([5]).list }
-end
-
-test_lanternfish_school_initialize
-test_lanternfish_school_list
