@@ -18,6 +18,15 @@ class LFSchool
   end
 
   def one_more_day!
+    # @stages = @stages.inject({}) do |hash,(key,value)| 
+    #   if key > 0
+    #     hash[key - 1] += value 
+    #   else 
+    #     hash[8] = value 
+    #     hash[6] += value
+    #   end
+    #   hash
+    # end
     new_stages = Hash.new(0)
     @stages.each do |k, v|
       if k > 0
